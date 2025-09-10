@@ -11,7 +11,9 @@ return {
   },
   lazy = false,
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>nn', ':Neotree toggle<CR>', desc = 'NeoTree toggle', silent = true },
+    { '<leader>nr', ':Neotree reveal<CR>', desc = 'NeoTree reveal file', silent = true },
+    { '<leader>e', '<cmd>wincmd p<cr>', desc = 'Focus main editor', silent = true },
   },
   opts = {
     filesystem = {
