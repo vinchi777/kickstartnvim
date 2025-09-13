@@ -100,11 +100,13 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.o.number = true
+vim.o.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.o.relativenumber = true
-vim.api.nvim_create_autocmd('InsertEnter', { command = [[set norelativenumber]] })
-vim.api.nvim_create_autocmd('InsertLeave', { command = [[set relativenumber]] })
+-- TODO: make sure it does not affect neo-tree
+-- vim.api.nvim_create_autocmd('InsertEnter', { command = [[setlocal norelativenumber]] })
+-- vim.api.nvim_create_autocmd('InsertLeave', { command = [[setlocal relativenumber]] })
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -161,7 +163,7 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+vim.o.scrolloff = 15
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -931,9 +933,13 @@ require('lazy').setup({
       window = {
         position = 'vertical',
       },
+      -- Diff Integration
+      diff_opts = {
+        vertical_split = false,
+      },
     },
     keys = {
-      { '<leader>cc', '<cmd>ClaudeCodeFocus<cr>', desc = 'Toggle Claude Code', mode = { 'n', 'x' } },
+      { '<leader>cc', '<cmd>ClaudeCode<cr>', desc = 'Toggle Claude Code', mode = { 'n', 'x' } },
       { '<C-j>', '<cmd>ClaudeCodeFocus<cr>', desc = 'Focus Claude Code', mode = { 'n', 'x' } },
     },
   },
@@ -1029,7 +1035,7 @@ require('lazy').setup({
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.noice',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -1040,9 +1046,11 @@ require('lazy').setup({
     config = function()
       require('bufferline').setup {
         options = {
+          buffer_close_icon = '✖',
           offsets = {
             {
-              filetype = 'snacks_layout_box',
+              -- filetype = 'snacks_layout_box',
+              filetype = 'neo-tree',
               text = 'File Explorer',
               -- text_align = 'left',
               separator = true,
@@ -1084,20 +1092,19 @@ require('lazy').setup({
           },
         },
       },
-      explorer = {
-        enabled = true,
-      },
-      picker = {
-        enabled = true,
-        sources = {
-          explorer = {
-            -- your explorer picker configuration comes here
-            -- or leave it empty to use the default settings
-          },
-        },
-      },
+      -- explorer = { enabled = true },
+      -- picker = {
+      --   sources = {
+      --     explorer = {
+      --       -- your explorer picker configuration comes here
+      --       -- or leave it empty to use the default settings
+      --     },
+      --   },
+      -- },
       git = { enabled = true },
+      gitbrowse = { enabled = true },
       bufdelete = { enabled = true },
+      styles = {},
     },
     keys = {
       {
@@ -1107,31 +1114,31 @@ require('lazy').setup({
         end,
         desc = 'Toggle Terminal',
       },
-      {
-        '<leader>nn',
-        function()
-          Snacks.explorer()
-        end,
-        desc = 'Toggle Explorer',
-      },
-      {
-        '<leader>nr',
-        function()
-          Snacks.explorer.reveal()
-        end,
-        desc = 'Explorer reveal file',
-      },
-      {
-        '<leader>e',
-        '<cmd>wincmd p<cr>',
-        desc = 'Focus main editor',
-      },
+      -- {
+      --   '<leader>nn',
+      --   function()
+      --     Snacks.explorer()
+      --   end,
+      --   desc = 'Toggle Explorer',
+      -- },
+      -- {
+      --   '<leader>e',
+      --   '<cmd>wincmd p<cr>',
+      --   desc = 'Focus main editor',
+      -- },
       {
         'qq',
         function()
           Snacks.bufdelete()
         end,
         desc = 'Delete Buffer',
+      },
+      {
+        '<leader>gb',
+        function()
+          Snacks.gitbrowse()
+        end,
+        desc = 'Git Browse',
       },
     },
   },
